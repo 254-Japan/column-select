@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Screenshot Preview — Column Select</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1280px;
+  height: 800px;
+  overflow: hidden;
+  background: #f1f3f4;
+  font-family: "Google Sans", "Segoe UI", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Gmail-like top bar */
+.topbar {
+  height: 64px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  border-bottom: 1px solid #e0e0e0;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.logo { font-size: 22px; color: #ea4335; font-weight: 300; letter-spacing: -0.5px; }
+.logo span { color: #4285f4; }
+.searchbar {
+  flex: 1; max-width: 720px;
+  background: #eaf1fb;
+  border-radius: 24px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: #444;
+  font-size: 14px;
+}
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #1a73e8;
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 500; margin-left: auto;
+}
+
+.main { display: flex; flex: 1; overflow: hidden; }
+
+/* Sidebar */
+.sidebar {
+  width: 256px; background: #fff; flex-shrink: 0;
+  padding: 8px 0;
+  border-right: 1px solid #e0e0e0;
+}
+.compose-btn {
+  margin: 8px 16px 16px;
+  background: #c2e7ff;
+  border-radius: 16px;
+  padding: 16px 24px;
+  font-size: 14px; font-weight: 500; color: #001d35;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+}
+.sidebar-item {
+  padding: 8px 16px 8px 24px;
+  font-size: 14px; color: #444;
+  display: flex; align-items: center; gap: 16px;
+  border-radius: 0 24px 24px 0;
+  margin-right: 16px;
+}
+.sidebar-item.active { background: #d3e3fd; font-weight: 500; color: #001d35; }
+
+/* Email list */
+.email-list { width: 380px; background: #fff; flex-shrink: 0; border-right: 1px solid #e0e0e0; overflow-y: auto; }
+.email-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px;
+}
+.email-item:hover { background: #f5f5f5; }
+.email-from { font-size: 13px; font-weight: 500; color: #202124; }
+.email-subject { font-size: 13px; color: #202124; }
+.email-preview { font-size: 12px; color: #5f6368; }
+.email-date { font-size: 11px; color: #5f6368; }
+
+/* Compose window */
+.compose-window {
+  position: fixed;
+  bottom: 0; right: 24px;
+  width: 560px;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+  display: flex; flex-direction: column;
+}
+.compose-header {
+  background: #404040;
+  color: #fff;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 8px 8px 0 0;
+  display: flex; align-items: center;
+}
+.compose-header span { flex: 1; }
+.compose-field {
+  padding: 8px 16px;
+  font-size: 14px; color: #444;
+  border-bottom: 1px solid #e0e0e0;
+}
+.compose-toolbar {
+  padding: 8px 16px;
+  display: flex; gap: 8px; align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 13px; color: #444;
+}
+.toolbar-btn {
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.toolbar-btn:hover { background: #f5f5f5; }
+
+/* The editable body with rect selection */
+.compose-body {
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.8;
+  flex: 1;
+  min-height: 200px;
+  color: #202124;
+  position: relative;
+  font-family: Arial, sans-serif;
+}
+.text-line { position: relative; display: block; }
+
+/* Yellow highlight = rect selection */
+.rect-highlight {
+  position: absolute;
+  background: rgba(251, 191, 36, 0.45);
+  border: none;
+  pointer-events: none;
+}
+.rect-border {
+  position: absolute;
+  border: 2px solid #1a73e8;
+  pointer-events: none;
+}
+
+/* Badge */
+.col-select-badge {
+  position: fixed;
+  bottom: 16px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(32,33,36,0.85);
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 16px;
+  pointer-events: none;
+  letter-spacing: 0.3px;
+}
+
+/* Tooltip overlay */
+.tooltip {
+  position: fixed;
+  top: 180px; left: 50%;
+  transform: translateX(-50%);
+  background: #202124;
+  color: #fff;
+  font-size: 13px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="logo">M<span>G</span></div>
+  <div class="searchbar">Search mail</div>
+  <div class="avatar">Y</div>
+</div>
+
+<div class="main">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="compose-btn">✏ Compose</div>
+    <div class="sidebar-item active">📥 Inbox <span style="margin-left:auto;font-size:12px">3</span></div>
+    <div class="sidebar-item">⭐ Starred</div>
+    <div class="sidebar-item">🕐 Snoozed</div>
+    <div class="sidebar-item">📤 Sent</div>
+    <div class="sidebar-item">📝 Drafts</div>
+  </div>
+
+  <!-- Email list -->
+  <div class="email-list">
+    <div class="email-item">
+      <div>
+        <div class="email-from">Team Alpha</div>
+        <div class="email-subject">Weekly report — Q2 summary</div>
+        <div class="email-preview">Please review the attached figures...</div>
+      </div>
+      <div class="email-date">10:42</div>
+    </div>
+    <div class="email-item">
+      <div>
+        <div class="email-from">GitHub</div>
+        <div class="email-subject">[column-select] New issue opened</div>
+        <div class="email-preview">Feature request: support for Outlook Web</div>
+      </div>
+      <div class="email-date">09:15</div>
+    </div>
+    <div class="email-item">
+      <div>
+        <div class="email-from">Chrome Web Store</div>
+        <div class="email-subject">Your extension has been approved</div>
+        <div class="email-preview">Congratulations! Column Select is now live.</div>
+      </div>
+      <div class="email-date">Yesterday</div>
+    </div>
+  </div>
+</div>
+
+<!-- Compose window -->
+<div class="compose-window">
+  <div class="compose-header">
+    <span>New Message</span>
+    <span style="opacity:0.7;font-size:18px;cursor:pointer;margin-left:8px">— ⤢ ✕</span>
+  </div>
+  <div class="compose-field" style="color:#888">To</div>
+  <div class="compose-field" style="color:#888">Subject</div>
+  <div class="compose-toolbar">
+    <span style="font-size:12px;background:#eee;padding:4px 8px;border-radius:4px">Sans Serif</span>
+    <span style="font-size:12px;background:#eee;padding:4px 8px;border-radius:4px">12pt</span>
+    <b style="padding:4px 6px">B</b>
+    <i style="padding:4px 6px">I</i>
+    <u style="padding:4px 6px">U</u>
+  </div>
+
+  <div class="compose-body" id="body">
+    <!-- Rect selection overlay -->
+    <div class="rect-border" style="left:57px;top:8px;width:62px;height:143px;border-radius:1px"></div>
+    <div class="rect-highlight" style="left:57px;top:8px;width:62px;height:143px"></div>
+
+    <span class="text-line">山田　太郎　営業部</span><br>
+    <span class="text-line">鈴木　花子　開発部</span><br>
+    <span class="text-line">田中　一郎　総務部</span><br>
+    <span class="text-line">伊藤　美咲　人事部</span><br>
+    <span class="text-line">渡辺　健太　経理部</span><br>
+    <span class="text-line">中村　さくら　広報部</span><br>
+    <span class="text-line">小林　誠　　IT部門</span><br>
+    <br>
+    <span style="color:#888">--<br>Sent with Column Select extension</span>
+  </div>
+</div>
+
+<!-- Badge -->
+<div class="col-select-badge">Col Select</div>
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Column Select — Welcome</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f7fa;
+    color: #1a1a1a;
+    line-height: 1.7;
+    padding: 40px 20px;
+  }
+  .container { max-width: 720px; margin: 0 auto; }
+  .hero {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .hero .icon { font-size: 48px; }
+  h1 { font-size: 26px; margin: 8px 0 6px; letter-spacing: 0.01em; }
+  .hero p { color: #444; font-size: 15px; }
+  .card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .card h2 {
+    font-size: 17px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    background: #1a73e8;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  kbd {
+    display: inline-block;
+    background: #f0f0f0;
+    border: 1px solid #c0c0c0;
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+  }
+  .demo-box {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 14px;
+    margin-top: 10px;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .demo-box .hl { background: rgba(255, 235, 59, 0.6); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td { padding: 7px 10px; border-bottom: 1px solid #eee; }
+  td:first-child { white-space: nowrap; width: 40%; }
+  .try-area {
+    width: 100%;
+    height: 110px;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 14px;
+    padding: 10px;
+    border: 1.5px solid #b0b0b0;
+    border-radius: 8px;
+    margin-top: 10px;
+    resize: vertical;
+  }
+  .footer {
+    text-align: center;
+    color: #5a5a5a;
+    font-size: 13px;
+    margin-top: 28px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="icon">▦</div>
+    <h1 data-i18n="title"></h1>
+    <p data-i18n="subtitle"></p>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">1</span><span data-i18n="step1Title"></span></h2>
+    <p data-i18n="step1Body"></p>
+    <div class="demo-box">2026-07-01  <span class="hl">apple </span>  100
+2026-07-02  <span class="hl">banana</span>  250
+2026-07-03  <span class="hl">cherry</span>  380</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">2</span><span data-i18n="step2Title"></span></h2>
+    <table>
+      <tr><td><kbd>Ctrl</kbd> + <kbd>C</kbd></td><td data-i18n="keyCopy"></td></tr>
+      <tr><td><kbd>Ctrl</kbd> + <kbd>X</kbd></td><td data-i18n="keyCut"></td></tr>
+      <tr><td><kbd>Ctrl</kbd> + <kbd>V</kbd></td><td data-i18n="keyPaste"></td></tr>
+      <tr><td><kbd>Ctrl</kbd> + <kbd>H</kbd></td><td data-i18n="keyReplace"></td></tr>
+      <tr><td data-i18n="keyTypeLabel"></td><td data-i18n="keyType"></td></tr>
+      <tr><td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td><td data-i18n="keyUndo"></td></tr>
+      <tr><td><kbd>Esc</kbd></td><td data-i18n="keyEsc"></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">3</span><span data-i18n="step3Title"></span></h2>
+    <p data-i18n="step3Body"></p>
+    <textarea class="try-area" spellcheck="false"></textarea>
+  </div>
+
+  <div class="footer" data-i18n="footer"></div>
+</div>
+
+<script src="welcome.js"></script>
+<script src="content.js"></script>
+</body>
+</html>

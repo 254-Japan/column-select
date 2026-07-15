@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# エディタ
+.vscode/
+*.swp
+
+# 一時ファイル
+*.zip
+*.crx
+*.pem
+
+# 認証情報(将来的に追加された場合の保険)
+*.env
+credentials.json
+secrets.json

@@ -1,0 +1,8 @@
+{
+  "appName": {
+    "message": "Column Select — 矩形選択（列選択）"
+  },
+  "appDescription": {
+    "message": "GmailやWebページで矩形選択（列選択・ボックス選択）。Alt+ドラッグで縦に選択して、コピー・カット・一括ペースト・範囲内置換。"
+  }
+}
